@@ -2,48 +2,29 @@
 //  SearchMoviesUseCase.swift
 //  ExampleMVVM
 //
-//  Created by Oleh Kudinov on 22.02.19.
+//  Created by Daniel Sunarjo on 22.02.19.
 //
 
 import Foundation
 
-protocol SearchMoviesUseCase {
-    func execute(requestValue: SearchMoviesUseCaseRequestValue,
-                 cached: @escaping (MoviesPage) -> Void,
-                 completion: @escaping (Result<MoviesPage, Error>) -> Void) -> Cancellable?
+protocol SearchMoviesUseCaseInterface {
+    func fetchMoviesList(
+        request: MoviesRequest,
+        completion: @escaping (Result<Movies, NetworkError>) -> Void
+    )
 }
 
-final class DefaultSearchMoviesUseCase: SearchMoviesUseCase {
-
-    private let moviesRepository: MoviesRepository
-    private let moviesQueriesRepository: MoviesQueriesRepository
-
-    init(moviesRepository: MoviesRepository,
-         moviesQueriesRepository: MoviesQueriesRepository) {
-
-        self.moviesRepository = moviesRepository
-        self.moviesQueriesRepository = moviesQueriesRepository
+final class SearchMoviesUseCase: SearchMoviesUseCaseInterface {
+    @Injected
+    private var moviesRepository: MoviesRepositoryInterface
+    
+    func fetchMoviesList(
+        request: MoviesRequest,
+        completion: @escaping (Result<Movies, NetworkError>) -> Void
+    ) {
+        moviesRepository.fetchMoviesList(
+            request: request,
+            completion: completion
+        )
     }
-
-    func execute(requestValue: SearchMoviesUseCaseRequestValue,
-                 cached: @escaping (MoviesPage) -> Void,
-                 completion: @escaping (Result<MoviesPage, Error>) -> Void) -> Cancellable? {
-
-        return moviesRepository.fetchMoviesList(query: requestValue.query,
-                                                page: requestValue.page,
-                                                cached: cached,
-                                                completion: { result in
-
-            if case .success = result {
-                self.moviesQueriesRepository.saveRecentQuery(query: requestValue.query) { _ in }
-            }
-
-            completion(result)
-        })
-    }
-}
-
-struct SearchMoviesUseCaseRequestValue {
-    let query: MovieQuery
-    let page: Int
 }
