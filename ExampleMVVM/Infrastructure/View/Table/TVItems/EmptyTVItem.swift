@@ -5,4 +5,4 @@
 //  Created by Daniel Sunarjo on 29/07/22.
 //
 
-class EmptyTVItem: TVItem {}
+final class EmptyTVItem: TVItem {}

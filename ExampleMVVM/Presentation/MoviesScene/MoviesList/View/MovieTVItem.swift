@@ -1,5 +1,5 @@
 //
-//  MovieViewItem.swift
+//  MovieTVItem.swift
 //  ExampleMVVM
 //
 //  Created by Daniel Sunarjo on 30/07/22.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-final class MovieViewItem: TVItem {
-    class State {
+final class MovieTVItem: TVItem {
+    class State: BaseState {
         var titleText: String = ""
         var movieImageUrl: String = ""
         var onTapButton: (() -> Void)?
@@ -18,7 +18,6 @@ final class MovieViewItem: TVItem {
     private lazy var titleLabel: UILabel = .init()
     private lazy var movieImage: ImageView = .init()
     private lazy var button: Button = .init()
-    private let containerMargin: Margin = .init(top: 8, bottom: 8, left: 8, right: 8)
     private let movieImageSize: CGSize = .init(width: 100, height: 100)
     private let imageToLabelSpace: CGFloat = 8
     
@@ -36,19 +35,19 @@ final class MovieViewItem: TVItem {
     }
     
     override func heightCell() -> CGFloat {
-        max(titleLabel.frame.height, movieImage.frame.height) + containerMargin.totalHeight
+        max(titleLabel.frame.height, movieImage.frame.height) + state.margin.totalHeight
     }
     
     private func setupView() {
-        addSubview(movieImage)
-        addSubview(titleLabel)
-        addSubview(button)
+        contentView.addSubview(movieImage)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(button)
     }
     
     private func renderImageView() {
         guard let movieImageUrl: URL = .init(string: state.movieImageUrl) else { return }
         movieImage.frame = .init(
-            x: containerMargin.left, y: containerMargin.top, width: movieImageSize.width, height: movieImageSize.height
+            x: state.margin.left, y: state.margin.top, width: movieImageSize.width, height: movieImageSize.height
         )
         movieImage.load(url: movieImageUrl)
     }
@@ -58,10 +57,10 @@ final class MovieViewItem: TVItem {
         titleLabel.textColor = .black
         titleLabel.numberOfLines = 0
         
-        let titleLabelWidth: CGFloat = frame.width - containerMargin.totalWidth - movieImage.frame.width - imageToLabelSpace
+        let titleLabelWidth: CGFloat = frame.width - state.margin.totalWidth - movieImage.frame.width - imageToLabelSpace
         let titleLabelHeight: CGFloat = state.titleText.height(width: titleLabelWidth, font: titleLabel.font)
         titleLabel.frame.size = .init(width: titleLabelWidth, height: titleLabelHeight)
-        titleLabel.frame.origin.y = containerMargin.top
+        titleLabel.frame.origin.y = state.margin.top
         titleLabel.outsideTrailing(to: movieImage, space: imageToLabelSpace)
     }
     
@@ -72,6 +71,5 @@ final class MovieViewItem: TVItem {
                 self?.state.onTapButton?()
             }
         }
-        bringSubviewToFront(button)
     }
 }

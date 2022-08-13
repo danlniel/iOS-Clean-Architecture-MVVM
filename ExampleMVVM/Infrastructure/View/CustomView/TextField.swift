@@ -9,6 +9,7 @@ import UIKit
 
 final class TextField: UITextField {
     class State {
+        var text: String?
         var textFieldDidChange: ((String?) -> Void)?
     }
     private let _state: State = .init()
@@ -27,6 +28,9 @@ final class TextField: UITextField {
     }
     
     private func setupView() {
+        text = _state.text
+        layer.borderWidth = 1
+        layer.borderColor = UIColor.gray.cgColor
         addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
     }
     

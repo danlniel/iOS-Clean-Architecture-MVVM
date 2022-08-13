@@ -19,7 +19,7 @@ final class AppNavigation: AppNavigationInterface {
 
     func createRootNavigationScreen() -> UINavigationController {
         // Can handle login flow from here
-        let mainScreen: MoviesListViewController = .create()
+        let mainScreen: LoginViewController = .create()
         navigationController = UINavigationController(rootViewController: mainScreen)
         return navigationController!
     }

@@ -41,8 +41,9 @@ final class MovieDetailViewController: TableViewController  {
     }
     
     private func createMovieDetalViewItem(titleText: String) -> TVItemInterface {
-        MovieDetailViewItem() { state in
+        MovieDetailTVItem() { state in
             state.titleText = titleText
+            state.margin = .init(top: 8, bottom: 8, left: 8, right: 8)
         }
     }
 }

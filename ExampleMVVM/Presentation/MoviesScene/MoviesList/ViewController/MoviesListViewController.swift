@@ -58,18 +58,19 @@ final class MoviesListViewController: TableViewController  {
     
     private func addNewItems(movies: [Movie]) {
         let moviesItemView: [TVItemInterface] = movies.map { movie in
-            createMovieViewItem(movieTitle: movie.title.emptyIfNil())
+            createMovieTVItem(movieTitle: movie.title.emptyIfNil())
         }
         tvPresenter.add(items: moviesItemView)
         reloadData()
     }
     
-    private func createMovieViewItem(movieTitle: String) -> TVItemInterface {
-        MovieViewItem() { state in
+    private func createMovieTVItem(movieTitle: String) -> TVItemInterface {
+        MovieTVItem() { state in
             state.titleText = movieTitle
             state.onTapButton = { [weak self] in
                 self?.viewModel.actions.goToMovieDetail(movieTitle: movieTitle)
             }
+            state.margin = .init(top: 8, bottom: 8, left: 8, right: 8)
         }
     }
 }
